@@ -44,15 +44,15 @@ class PhysicImpact:
             y = (m/k)*((vy0 + m*self.g/k) * (1 - math.exp(-k/m*t)) - self.g*t)
             return [x, y]
     """
-    def GetVelocities(self, vx0, vy0, v_max, dt):
+    def GetVelocities(self, v_max, dt):
     # Takes initial coordinates, initial velocities, terminal velocity (!) and time step.
     # Returns numerical solution for velocities of body at t+dt.
         if(dt < 0 or v_max < 0):
             raise Exception("Wrong parameters")
-        v = math.sqrt(vx0*vx0 + vy0*vy0)
-        vx = vx0 - self.g*(v*vx0/(v_max*v_max))*dt
-        vy = vy0  + ( -self.g*v*vy0/(v_max*v_max) - self.g ) * dt
-        return [vx, vy]
+        v = math.sqrt(self.VX*self.VX + self.VY*self.VY)
+        self.VX = self.VX - self.g*(v*self.VX/(v_max*v_max))*dt
+        self.VY = self.VY  + ( -self.g*v*self.VY/(v_max*v_max) - self.g ) * dt
+        return [self.VX, self.VY]
     
     def Move(self, x, y, z):
         self.Y = y
@@ -65,19 +65,22 @@ class Body(PhysicImpact):
     E = 1.0E3
     Z = 0
     X = 0
-    y = 0
+    Y = 0
+    VX = 0
+    VY = 0
     Width = 0
     Height = 0
     RVector = [0,0]
     Mass = 0
-    Alpha = 0 # Regarding of the horison
+    Alpha = 0 # Regarding of the horison.
     VMax = 0
     V0 = 0
     #...
-    def __init__(self, name, mass):
+    def __init__(self, name, mass, alpha):
         self.Name = name
         self.Mass = mass
-        self.V0 = math.sqrt((2.0 * E) / mass)
+        self.V0 = math.sqrt((2.0 * self.E) / mass)
+        self.Alpha = alpha
 class Scene:
     Bodies = []
     def __init__(self, name):

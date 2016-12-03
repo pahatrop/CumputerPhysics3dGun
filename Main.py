@@ -41,12 +41,22 @@ class Cannonball:
         def __init__(self):
                 storage = bge.logic.globalDict
                 if not "cannonball" in storage:
-                        storage["cannonball"] = Body("Cannonball", 0.4)
-                print(storage["test"])
-                storage["test"] = storage["test"] + 1
-
-
-
+                        storage["cannonball"] = Body("Cannonball", 0.4, 15.0)
+                        cannonball = storage["cannonball"]
+                        cannonball.VX = cannonball.V0*math.cos(cannonball.Alpha/180*math.pi)
+                        cannonball.VY = cannonball.V0*math.sin(cannonball.Alpha/180*math.pi)
+                v_max = 15
+                dt = 0.1
+                cannonball = storage["cannonball"]
+                
+                v = cannonball.GetVelocities(v_max, dt)
+                cannonball.X = cannonball.X + (cannonball.VX + v[0])/2*dt # Predictor-corrector.
+                cannonball.Y = cannonball.Y + (cannonball.VY + v[1])/2*dt
+                
+                cont = bge.logic.getCurrentController()
+                obj = cont.owner
+                obj.position = [cannonball.X, obj.position[1], cannonball.Y]
+                
 
 
 
