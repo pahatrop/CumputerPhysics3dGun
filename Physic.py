@@ -7,43 +7,6 @@ class PhysicImpact:
         raise Exception('Not implemented exception')
     g = 9.80665
     # Analytical and F~v solution isn't required.
-    """
-    def GetVelocities_numerical_v(self, x0, y0, vx0, vy0, m, k, dt):
-        # This function takes coordinates, velocities, mass, air drag coefficient at the moment t
-        # and returns velocities at the next moment (t + dt).
-        if(m < 0 or k < 0 or dt < 0):
-            raise Exception("Wrong parameters")
-        vx = vx0 - (k / m) * vx0 * dt
-        vy = vy0 - (self.g + (k / m)*vy0)*dt
-        return [vx, vy]
-
-    def GetVelocities_numerical_v2(self, x0, y0, vx0, vy0, m, k, dt):
-        # Same as previous function for F ~ v^2.
-        if(m < 0 or k < 0 or dt < 0):
-                raise Exception("Wrong parameters")
-        v = math.sqrt(vx0*vx0 + vy0*vy0)
-        vx = vx0 - (k / m) * v * vx0 * dt
-        vy = vy0  + ( -self.g - (k / m) * v * vy0) * dt
-        return [vx, vy]
-    
-    def GetCoordinates_analytical_v(self, x0, y0, E, m, alpha, k, t):
-        # Initial coordinates, kinetical energy, mass, angle, air drag coefficient, time.
-        # Function returns analytical solution for coordinates of body.
-        if(E < 0 or m < 0 or alpha < 0 or alpha > 180 or k < 0 or t < 0):
-            raise Exception("Wrong parameters")
-        alpha = alpha / 180 * math.pi
-        v = math.sqrt((2.0 * E) / m)
-        vx0 = v * math.cos(alpha)
-        vy0 = v * math.sin(alpha)
-        if(k == 0): # No air drag.
-                x = x0 + vx0*t
-                y = y0 + vy0*t - self.g*t*t/2
-                return [x, y]
-        else:
-            x = (vx0*m/k)*(1-math.exp(-k/m*t))
-            y = (m/k)*((vy0 + m*self.g/k) * (1 - math.exp(-k/m*t)) - self.g*t)
-            return [x, y]
-    """
     def GetVelocities(self, v_max, dt):
     # Takes initial coordinates, initial velocities, terminal velocity (!) and time step.
     # Returns numerical solution for velocities of body at t+dt.
@@ -54,6 +17,18 @@ class PhysicImpact:
         self.VY = self.VY  + ( -self.g*v*self.VY/(v_max*v_max) - self.g ) * dt
         return [self.VX, self.VY]
     
+    def Rotate(self, x0, y0, z0, theta):
+    # Rotate Z-X-Y coordinates by angle of theta.
+        theta = theta/180.0*math.pi
+        return [x0*math.sin(theta), y0, x0*math.cos(theta)]
+
+    def GetRecoilVelocity(self, mu, v, dt):
+    # Velocity of weapon after recoil.
+        if(v < mu*self.g*dt):
+            return 0
+        else:
+            return v - mu*self.g*dt
+
     def Move(self, x, y, z):
         self.Y = y
         self.X = x
