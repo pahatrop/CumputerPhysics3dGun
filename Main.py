@@ -40,11 +40,9 @@ plt.savefig("test.png")"""
 class Cannonball:
         def __init__(self):
                 storage = bge.logic.globalDict
-                if not "cannonball" in storage:
-                        storage["cannonball"] = Body("Cannonball", 0.4, 15.0)
-                        cannonball = storage["cannonball"]
-                        cannonball.VX = cannonball.V0*math.cos(cannonball.Alpha/180*math.pi)
-                        cannonball.VY = cannonball.V0*math.sin(cannonball.Alpha/180*math.pi)
+                cont = bge.logic.getCurrentController()
+                obj = cont.owner
+                xyz = obj.localOrientation.to_euler()
                 v_max = 15
                 dt = 0.1
                 cannonball = storage["cannonball"]
@@ -52,10 +50,13 @@ class Cannonball:
                 v = cannonball.GetVelocities(v_max, dt)
                 cannonball.X = cannonball.X + (cannonball.VX + v[0])/2*dt # Predictor-corrector.
                 cannonball.Y = cannonball.Y + (cannonball.VY + v[1])/2*dt
+                z = math.sin(xyz[2]*100) * cannonball.X 
+                cannonball.Z = cannonball.Z0 + z
                 
-                cont = bge.logic.getCurrentController()
-                obj = cont.owner
-                obj.position = [cannonball.X, obj.position[1], cannonball.Y]
+                storage["cannonball"].Z = cannonball.Z 
+                print(cannonball.Z)
+                
+                obj.position = [cannonball.X, cannonball.Z, cannonball.Y]
                 
 
 
