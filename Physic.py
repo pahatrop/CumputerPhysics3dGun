@@ -17,7 +17,7 @@ class PhysicImpact:
         self.VY = self.VY  + ( -self.g*v*self.VY/(v_max*v_max) - self.g ) * dt
         return [self.VX, self.VY]
     
-    def Rotate(self, x0, y0, z0, theta):
+    def Rotate(self, x0, y0, theta):
     # Rotate Z-X-Y coordinates by angle of theta.
         theta = theta/180.0*math.pi
         return [x0*math.sin(theta), y0, x0*math.cos(theta)]

@@ -45,18 +45,26 @@ class Cannonball:
                 xyz = obj.localOrientation.to_euler()
                 v_max = 15
                 dt = 0.1
-                cannonball = storage["cannonball"]
+                cb = storage["cannonball"]
                 
-                v = cannonball.GetVelocities(v_max, dt)
-                cannonball.X = cannonball.X + (cannonball.VX + v[0])/2*dt # Predictor-corrector.
-                cannonball.Y = cannonball.Y + (cannonball.VY + v[1])/2*dt
-                z = math.sin(xyz[2]*100) * cannonball.X 
-                cannonball.Z = cannonball.Z0 + z
+                v = cb.GetVelocities(v_max, dt)
+                cb.X = cb.X + (cb.VX + v[0])/2*dt # Predictor-corrector.
+                cb.Y = cb.Y + (cb.VY + v[1])/2*dt
+                #z = math.sin(0-xyz[2]*100) * cb.X 
+                #cb.Z = cb.Z0 + z
+                cb.Z = cb.Z0
+                storage["cannonball"].Z = cb.Z
+
                 
-                storage["cannonball"].Z = cannonball.Z 
-                print(cannonball.Z)
+                theta = xyz[2]
+                print("Angle: "+str(theta*180/math.pi))
+                r = cb.Rotate(cb.X, cb.Y, theta)
+                cb.X = r[0]
+                cb.Y = r[1]
+                cb.Z = r[2]
+                print(str(cb.X) + ' ' + str(cb.Y) + ' ' + str(cb.Z))
                 
-                obj.position = [cannonball.X, cannonball.Z, cannonball.Y]
+                obj.position = [cb.Z + cb.Z0, cb.X + cb.X0, cb.Y + cb.Y0] 
                 
 
 
