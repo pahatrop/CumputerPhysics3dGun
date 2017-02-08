@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 from Physic import *
 import math
 import time

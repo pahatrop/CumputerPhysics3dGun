@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 import math
 
 class PhysicImpact:
@@ -37,6 +38,10 @@ class PhysicImpact:
 class Body(PhysicImpact):
     X0 = 0
     Y0 = 0
+    E = 1.0E3 # В будущем было бы неплохо варьировать энергию снаряда, т.е. его начальную скорость.
+    Z = 0
+    X = 0
+    Y0 = 0
     Z0 = 0
     E = 1.0E3
     Z = 0
@@ -53,10 +58,14 @@ class Body(PhysicImpact):
     V0 = 0
     #...
     def __init__(self, name, mass, alpha, x0, y0, z0):
+        # alpha in degrees
         self.Name = name
         self.Mass = mass
         self.V0 = math.sqrt((2.0 * self.E) / mass)
-        self.Alpha = alpha
+        self.Alpha = alpha*180/math.pi
+        self.VX = self.V0*math.cos(alpha)
+        self.VY = self.V0*math.sin(alpha)
+
         self.X0 = x0
         self.Y0 = y0
         self.Z0 = z0
